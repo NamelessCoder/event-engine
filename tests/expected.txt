@@ -1,0 +1,15 @@
+
+============ EventEngine DEMO APPLICATION ============
+
+* Application is starting
+  - MyEventHandler detected Application started at: 2017-10-09 22:28
+* Application thinks it will emulate data fetching with condition "true
+  - MyEventHandler is changing condition to "false"
+* Application will now emulate data fetching with condition "false
+  - MyEventHandler is adding "baz" with value "example" to the EventData
+* Application fetched data: {"foo":"bar","baz":"example"}
+* Application took 0.31 milliseconds to fetch data
+"This output comes from Application"
+  - MyEventHandler determined Application sent 36 byte(s) of some output
+* Application will now exit
+  - MyEventHandler determined the Application took 0.46 milliseconds to finish

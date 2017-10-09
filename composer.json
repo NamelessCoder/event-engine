@@ -1,0 +1,8 @@
+{
+  "name": "namelesscoder/event-engine",
+  "autoload": {
+    "psr-4": {
+      "NamelessCoder\\EventEngine\\": "src/"
+    }
+  }
+}
