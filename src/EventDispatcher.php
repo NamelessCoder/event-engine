@@ -20,7 +20,13 @@ class EventDispatcher implements EventDispatcherInterface
 
     public function addHandler(EventHandlerInterface $eventHandler)
     {
-        foreach ($eventHandler->getHandledEventTypes() as $handledEventType) {
+        $handledEventTypes = $eventHandler->getHandledEventTypes();
+        if (in_array(EventTypeInterface::ANY_EVENT_TYPE, $handledEventTypes)) {
+            // An event handler which handles any event listens for no particular events and
+            // thus won't receive events twice, and will receive events after specific handlers.
+            $handledEventTypes = [EventTypeInterface::ANY_EVENT_TYPE];
+        }
+        foreach ($handledEventTypes as $handledEventType) {
             if (!isset($this->handlers[$handledEventType])) {
                 $this->handlers[$handledEventType] = [$eventHandler];
             } elseif (!in_array($eventHandler, $this->handlers[$handledEventType])) {
@@ -32,6 +38,12 @@ class EventDispatcher implements EventDispatcherInterface
     public function dispatch(EventInterface $event, bool $allowStopPropagation = false): EventInterface
     {
         foreach ($this->handlers[$event->getType()->getName()] ?? [] as $eventHandler) {
+            $event = $eventHandler->handleEvent($event);
+            if ($allowStopPropagation && $event->isStopped()) {
+                return $event;
+            }
+        }
+        foreach ($this->handlers[EventTypeInterface::ANY_EVENT_TYPE] ?? [] as $eventHandler) {
             $event = $eventHandler->handleEvent($event);
             if ($allowStopPropagation && $event->isStopped()) {
                 return $event;
